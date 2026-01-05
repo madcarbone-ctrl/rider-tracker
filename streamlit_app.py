@@ -1,91 +1,81 @@
 import streamlit as st
 
-# Setup base
-st.set_page_config(page_title="Rider Tracker", layout="centered")
+# Rimuoviamo ogni layout dinamico
+st.set_page_config(layout="centered")
 
-# CSS TOTALE: Sovrascrive ogni regola del telefono
 st.markdown("""
 <style>
-    /* Nasconde i menu inutili di Streamlit per guadagnare spazio */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    [data-testid="stAppViewBlockContainer"] { padding: 5px !important; margin: 0 !important; }
-
-    /* CONTENITORE DASHBOARD: Forza la griglia fissa */
-    .dashboard-wrapper {
-        display: block;
-        width: 100%;
-        background-color: #000;
-        padding: 5px;
-    }
+    /* Sfondo nero e rimozione spazi bianchi */
+    .stApp { background-color: #000; }
+    [data-testid="stAppViewBlockContainer"] { padding: 0px !important; margin: 0px !important; }
     
-    .grid-row {
+    /* LA GRIGLIA D'ACCIAIO: Larghezza fissa in pixel */
+    .fixed-grid {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-around;
-        margin-bottom: 8px;
+        flex-wrap: nowrap !important; /* VIETA di andare a capo */
+        justify-content: center !important;
+        gap: 4px !important;
+        width: 100% !important;
+        margin-bottom: 5px !important;
     }
 
     .card {
-        width: 31% !important; /* Forza 3 per riga */
+        width: 110px !important; /* Larghezza fissa per farle stare affiancate */
         background-color: #121212;
         border: 1px solid #282828;
         border-radius: 8px;
-        padding: 12px 0px;
+        padding: 10px 0px;
         text-align: center;
+        flex-shrink: 0 !important; /* Impedisce al telefono di schiacciarle */
     }
 
-    .lbl { font-size: 9px; color: #888; font-weight: bold; }
-    .val-c { color: #00CCBC; font-size: 15px; font-weight: bold; }
-    .val-r { color: #FF4B4B; font-size: 15px; font-weight: bold; }
+    .lbl { font-size: 10px; color: #888; font-weight: bold; }
+    .val-c { color: #00CCBC; font-size: 16px; font-weight: bold; }
+    .val-r { color: #FF4B4B; font-size: 16px; font-weight: bold; }
 
-    /* BOTTONI ANDROID NATIVI */
+    /* BOTTONI GRANDI DA RIDER */
     .stButton > button {
-        width: 100% !important;
+        width: 95% !important;
         height: 60px !important;
-        background-color: #1a1a1a !important;
+        margin-left: 2.5%;
+        background-color: #121212 !important;
         border: 1px solid #00CCBC !important;
-        border-radius: 12px !important;
         color: #00CCBC !important;
+        border-radius: 12px !important;
         font-weight: bold !important;
-        margin-bottom: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# TITOLO
-st.markdown("<h2 style='text-align:center; color:#00CCBC; margin:10px 0;'>RIDER PRO</h2>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align:center; color:#00CCBC; margin-top:10px;'>RIDER TRACKER PRO</h3>", unsafe_allow_html=True)
 
-# LA GRIGLIA CHE NON SI ROMPE (HTML PURO)
+# DASHBOARD 3x3: Sezione Superiore
 st.markdown("""
-<div class="dashboard-wrapper">
-    <div class="grid-row">
-        <div class="card"><div class="lbl">LORDO</div><div class="val-c">€0.00</div></div>
-        <div class="card"><div class="lbl">NETTO</div><div class="val-r">€0.00</div></div>
-        <div class="card"><div class="lbl">ORE</div><div class="val-c">0.0</div></div>
-    </div>
-    <div class="grid-row">
-        <div class="card"><div class="lbl">LITRI</div><div class="val-c">0.0L</div></div>
-        <div class="card"><div class="lbl">KM/L</div><div class="val-c">0.0</div></div>
-        <div class="card"><div class="lbl">BENZINA</div><div class="val-c">€0.00</div></div>
-    </div>
+<div class="fixed-grid">
+    <div class="card"><div class="lbl">LORDO</div><div class="val-c">€0.00</div></div>
+    <div class="card"><div class="lbl">NETTO</div><div class="val-r">€0.00</div></div>
+    <div class="card"><div class="lbl">ORE</div><div class="val-c">0.0</div></div>
+</div>
+<div class="fixed-grid">
+    <div class="card"><div class="lbl">LITRI</div><div class="val-c">0.0L</div></div>
+    <div class="card"><div class="lbl">KM/L</div><div class="val-c">0.0</div></div>
+    <div class="card"><div class="lbl">BENZINA</div><div class="val-c">€0.00</div></div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<div style='margin:15px 0; border-top:1px solid #333;'></div>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
-# TASTI AZIONE
+# TASTI AZIONE GRANDI
 if st.button("➕ AGGIUNGI TURNO"):
     st.session_state.m = 't'
 if st.button("⛽ SEGNA BENZINA"):
     st.session_state.m = 'b'
 
-# DATA FISSA: 05 GENNAIO 2026
+# DATA AUTOMATICA 05/01/2026
 if st.session_state.get('m') == 't':
-    st.markdown("<div style='background:#121212; padding:15px; border-radius:10px; border:1px solid #00CCBC;'>", unsafe_allow_html=True)
-    st.write("Registrazione per: **05/01/2026**")
-    st.number_input("Lordo €", step=0.50)
-    st.number_input("KM", step=1)
-    if st.button("SALVA DATI"): st.success("OK!")
+    st.markdown("<div style='background:#121212; padding:20px; border:1px solid #00CCBC; border-radius:15px; margin:10px;'>", unsafe_allow_html=True)
+    st.write("Turno del: **05 Gennaio 2026**")
+    st.number_input("Quanto hai fatto? (€)", step=1.0)
+    if st.button("SALVA DEFINITIVO"): st.success("Dato registrato!")
     st.markdown("</div>", unsafe_allow_html=True)
