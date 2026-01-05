@@ -1,69 +1,69 @@
 import streamlit as st
 
-# Setup che forza la pagina a non allargarsi inutilmente
-st.set_page_config(page_title="Rider Tracker", layout="centered")
+# Blocchiamo il layout per evitare che il telefono lo allarghi
+st.set_page_config(layout="centered")
 
-# CSS ESTREMO: Questo cancella le regole di Streamlit che incolonnano tutto
 st.markdown("""
 <style>
-    /* Rimuove i margini di Streamlit che rubano spazio */
-    [data-testid="stAppViewBlockContainer"] { padding: 5px !important; margin: 0 !important; }
+    /* Nascondiamo i margini di Streamlit per recuperare spazio */
+    [data-testid="stAppViewBlockContainer"] { padding: 5px !important; }
     .stApp { background-color: #000; }
 
-    /* CONTENITORE UNICO: Non permette di andare a capo */
-    .super-grid {
-        display: block;
-        width: 100%;
-        text-align: center;
-        background: #000;
+    /* CONTENITORE DASHBOARD: Larghezza bloccata per Samsung A34 */
+    .dashboard-container {
+        width: 340px; /* Calibrato sui tuoi 1080px reali */
+        margin: 0 auto;
+        background-color: #000;
     }
 
-    .row {
+    .grid-row {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important; /* VIETATO andare a capo */
-        justify-content: center;
-        gap: 4px;
-        margin-bottom: 5px;
+        flex-wrap: nowrap !important; /* VIETA l'incolonnamento */
+        justify-content: space-between;
+        margin-bottom: 6px;
     }
 
     .tile {
-        width: 31% !important; /* Tre tiles occupano il 93%, perfetto per il Samsung */
-        background: #111;
-        border: 1px solid #222;
+        width: 108px !important; /* 108px x 3 = 324px + margini = 340px */
+        background: #121212;
+        border: 1px solid #282828;
         border-radius: 8px;
-        padding: 10px 0;
+        padding: 12px 0;
+        text-align: center;
+        flex-shrink: 0 !important;
     }
 
-    .t { font-size: 9px; color: #777; font-weight: bold; margin-bottom: 2px; }
-    .v-c { color: #00CCBC; font-size: 15px; font-weight: bold; }
-    .v-r { color: #FF4B4B; font-size: 15px; font-weight: bold; }
+    .t { font-size: 10px; color: #888; font-weight: bold; margin-bottom: 2px; }
+    .v-c { color: #00CCBC; font-size: 16px; font-weight: bold; }
+    .v-r { color: #FF4B4B; font-size: 16px; font-weight: bold; }
 
-    /* BOTTONI GRANDI */
+    /* BOTTONI GRANDI TATTILI */
     .stButton > button {
-        width: 100% !important;
-        height: 55px !important;
+        width: 340px !important;
+        height: 60px !important;
         background: #111 !important;
         border: 1px solid #00CCBC !important;
         color: #00CCBC !important;
         border-radius: 12px !important;
         font-weight: bold !important;
-        margin-bottom: 8px;
+        font-size: 16px !important;
+        margin-top: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h3 style='text-align:center; color:#00CCBC; margin:10px 0;'>RIDER TRACKER PRO</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align:center; color:#00CCBC; width:340px; margin:10px auto;'>RIDER TRACKER PRO</h3>", unsafe_allow_html=True)
 
-# DASHBOARD BLOCCATA IN 3 COLONNE (HTML puro)
+# DASHBOARD 3x3 IN PIXEL (Indistruttibile)
 st.markdown("""
-<div class="super-grid">
-    <div class="row">
+<div class="dashboard-container">
+    <div class="grid-row">
         <div class="tile"><div class="t">LORDO</div><div class="v-c">€0.00</div></div>
         <div class="tile"><div class="t">NETTO</div><div class="v-r">€0.00</div></div>
         <div class="tile"><div class="t">ORE</div><div class="v-c">0.0</div></div>
     </div>
-    <div class="row">
+    <div class="grid-row">
         <div class="tile"><div class="t">LITRI</div><div class="v-c">0.0L</div></div>
         <div class="tile"><div class="t">KM/L</div><div class="v-c">0.0</div></div>
         <div class="tile"><div class="t">BENZINA</div><div class="v-c">€0.00</div></div>
@@ -71,19 +71,19 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<div style='height:1px; background:#333; margin:15px 0;'></div>", unsafe_allow_html=True)
+st.write("---")
 
 # TASTI AZIONE
-if st.button("➕ AGGIUNGI TURNO"):
+if st.button("➕ NUOVO TURNO"):
     st.session_state.m = 't'
-if st.button("⛽ SEGNA BENZINA"):
+if st.button("⛽ RIFORNIMENTO"):
     st.session_state.m = 'b'
 
-# MODULO INSERIMENTO
+# MODULO INSERIMENTO (Oggi 05/01/2026)
 if st.session_state.get('m') == 't':
-    st.markdown("<div style='background:#111; padding:15px; border-radius:10px; border:1px solid #00CCBC;'>", unsafe_allow_html=True)
-    st.write("Registra Turno: **05/01/2026**")
-    st.number_input("Lordo €", step=0.50)
+    st.markdown("<div style='width:340px; margin:0 auto; background:#111; padding:15px; border-radius:10px; border:1px solid #00CCBC;'>", unsafe_allow_html=True)
+    st.write("Turno del 05/01/2026")
+    st.number_input("Guadagno €", format="%.2f")
     st.number_input("Chilometri", step=1)
-    if st.button("CONFERMA"): st.success("OK!")
+    if st.button("CONFERMA SALVATAGGIO"): st.success("Salvato!")
     st.markdown("</div>", unsafe_allow_html=True)
