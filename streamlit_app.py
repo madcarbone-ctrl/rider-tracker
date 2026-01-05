@@ -1,77 +1,57 @@
 import streamlit as st
-from datetime import datetime
 
-# Configurazione per ignorare i limiti di larghezza mobile
-st.set_page_config(page_title="Rider Tracker Pro", layout="wide")
+st.set_page_config(layout="wide")
 
+# CSS ESTREMO: Obbliga il telefono a non incolonnare
 st.markdown("""
 <style>
-    /* Forza il colore di sfondo nero ovunque */
-    .stApp { background-color: #000000; }
-    [data-testid="stAppViewBlockContainer"] { padding: 10px !important; }
-
-    /* GRIGLIA FORZATA 3x3: Non si rompe su smartphone */
-    .grid-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr; /* Obbliga 3 colonne */
-        gap: 6px;
-        width: 100%;
+    /* Rimuove i blocchi di Streamlit che causano l'incolonnamento */
+    [data-testid="column"] {
+        width: 32% !important;
+        flex: 1 1 32% !important;
+        min-width: 32% !important;
     }
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+    .stApp { background-color: black; }
     
-    .grid-item {
+    /* Box Dashboard */
+    .box {
         background-color: #121212;
-        border: 1px solid #282828;
+        border: 1px solid #333;
         border-radius: 8px;
         padding: 10px 2px;
         text-align: center;
     }
-    
-    .label { font-size: 10px; color: #757575; font-weight: bold; margin-bottom: 2px; }
-    .val-cyan { color: #00CCBC; font-size: 15px; font-weight: bold; }
-    .val-red { color: #FF4B4B; font-size: 15px; font-weight: bold; }
-
-    /* Bottoni Android Style */
-    .stButton > button {
-        width: 100%;
-        border-radius: 12px;
-        height: 55px;
-        background-color: #121212;
-        border: 1px solid #00CCBC;
-        color: white;
-        margin-top: 10px;
-    }
+    .t { font-size: 10px; color: #888; }
+    .v-c { color: #00CCBC; font-size: 16px; font-weight: bold; }
+    .v-r { color: #FF4B4B; font-size: 16px; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# Titolo compatto
-st.markdown("<h3 style='text-align: center; color: #00CCBC;'>RIDER TRACKER PRO</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align:center;color:#00CCBC;'>RIDER TRACKER PRO</h3>", unsafe_allow_html=True)
 
-# DASHBOARD REALE (Stile il tuo primo screenshot)
-st.markdown("""
-<div class="grid-container">
-    <div class="grid-item"><div class="label">LORDO</div><div class="val-cyan">€0.00</div></div>
-    <div class="grid-item"><div class="label">NETTO</div><div class="val-red">€0.00</div></div>
-    <div class="grid-item"><div class="label">ORE</div><div class="val-cyan">0.0</div></div>
-    <div class="grid-item"><div class="label">LITRI</div><div class="val-cyan">0.0L</div></div>
-    <div class="grid-item"><div class="label">KM/L</div><div class="val-cyan">0.0</div></div>
-    <div class="grid-item"><div class="label">BENZINA</div><div class="val-cyan">€0.00</div></div>
-</div>
-""", unsafe_allow_html=True)
+# DASHBOARD 3x3 FORZATA
+# Riga 1
+c1, c2, c3 = st.columns(3)
+c1.markdown('<div class="box"><div class="t">LORDO</div><div class="v-c">€0.00</div></div>', unsafe_allow_html=True)
+c2.markdown('<div class="box"><div class="t">NETTO</div><div class="v-r">€0.00</div></div>', unsafe_allow_html=True)
+c3.markdown('<div class="box"><div class="t">ORE</div><div class="v-c">0.0</div></div>', unsafe_allow_html=True)
+
+st.write("") # Spazio
+
+# Riga 2
+c4, c5, c6 = st.columns(3)
+c4.markdown('<div class="box"><div class="t">LITRI</div><div class="v-c">0.0L</div></div>', unsafe_allow_html=True)
+c5.markdown('<div class="box"><div class="t">KM/L</div><div class="v-c">0.0</div></div>', unsafe_allow_html=True)
+c6.markdown('<div class="box"><div class="t">BENZINA</div><div class="v-c">€0.00</div></div>', unsafe_allow_html=True)
 
 st.write("---")
 
-# Pulsanti facili da premere
-c1, c2 = st.columns(2)
-with c1:
-    if st.button("➕ TURNO"): st.session_state.m = 't'
-with c2:
-    if st.button("⛽ BENZINA"): st.session_state.m = 'b'
-
-# Modulo Inserimento (Oggi: 5 Gen 2026)
-if st.session_state.get('m') == 't':
-    st.markdown("<div style='border:1px solid #00CCBC; padding:15px; border-radius:10px;'>", unsafe_allow_html=True)
-    st.write("Nuovo Turno - 05/01/2026")
-    st.number_input("Lordo €", format="%.2f")
-    st.number_input("KM", step=1)
-    if st.button("SALVA ORA"): st.success("Dato Salvato!")
-    st.markdown("</div>", unsafe_allow_html=True)
+# TASTI GRANDI
+if st.button("➕ NUOVO TURNO (05/01/2026)"): st.info("Inserisci dati turno")
+if st.button("⛽ RIFORNIMENTO BENZINA"): st.warning("Inserisci spesa benzina")
+if st.button("🕒 VEDI STORICO"): st.write("Storico vuoto")
