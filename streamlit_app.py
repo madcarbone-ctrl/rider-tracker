@@ -1,21 +1,17 @@
 import streamlit as st
 
-# Setup per eliminare ogni margine
 st.set_page_config(layout="centered")
 
 st.markdown("""
 <style>
-    /* Sfondo nero e rimozione totale spazi Streamlit */
     .stApp { background-color: #000; }
     [data-testid="stAppViewBlockContainer"] { padding: 0px !important; margin: 0px !important; }
-    [data-testid="stHeader"] {display:none;}
-    [data-testid="stToolbar"] {display:none;}
+    [data-testid="stHeader"], [data-testid="stToolbar"] {display:none !important;}
 
-    /* TABELLA 3x3 INDISTRUTTIBILE */
     .grid-9 {
         width: 100% !important;
         border-collapse: collapse;
-        table-layout: fixed !important; /* Obbliga le colonne a restare della stessa misura */
+        table-layout: fixed !important;
     }
     .cell {
         background: #121212;
@@ -24,7 +20,7 @@ st.markdown("""
         text-align: center;
         width: 33.33%;
     }
-    .lbl { font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
+    .lbl { font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase; }
     .val-c { color: #00CCBC; font-size: 16px; font-weight: bold; }
     .val-r { color: #FF4B4B; font-size: 16px; font-weight: bold; }
 </style>
