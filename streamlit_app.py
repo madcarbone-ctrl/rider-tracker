@@ -1,88 +1,85 @@
 import streamlit as st
 from datetime import datetime
 
-# CONFIGURAZIONE ANDROID NATIVE
-st.set_page_config(page_title="Rider Tracker Pro", layout="wide")
+# CONFIGURAZIONE SMARTPHONE
+st.set_page_config(page_title="Rider Tracker Pro", layout="centered")
 
-# STILE CSS PER FORZARE LA GRIGLIA 3x3 (Come il tuo screenshot)
+# CSS AGGRESSIVO PER SMARTPHONE (Forza la visualizzazione mobile)
 st.markdown("""
 <style>
-    [data-testid="stAppViewBlockContainer"] { padding: 10px; background-color: #000000; }
-    .main { background-color: #000000; }
+    /* Elimina i margini vuoti ai lati su Android */
+    [data-testid="stAppViewBlockContainer"] {
+        padding: 10px !important;
+        max-width: 100% !important;
+    }
     
-    /* Griglia Dashboard */
-    .row-container {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        gap: 5px;
+    /* Forza la griglia 3x3 su schermi stretti */
+    .mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 15px;
     }
-    .card {
-        background-color: #161616;
-        border-radius: 12px;
-        padding: 10px 5px;
-        text-align: center;
-        flex: 1;
-        border: 1px solid #262626;
-    }
-    .label { font-size: 10px; color: #888; margin-bottom: 5px; }
-    .val-cyan { color: #00CCBC; font-size: 16px; font-weight: bold; }
-    .val-red { color: #FF4B4B; font-size: 16px; font-weight: bold; }
-
-    /* Bottoni Android Style */
-    div.stButton > button {
-        width: 100%;
-        background-color: #161616;
-        color: white;
+    
+    .mobile-card {
+        background-color: #1a1a1a;
         border: 1px solid #333;
         border-radius: 10px;
-        padding: 15px;
+        padding: 8px 2px;
+        text-align: center;
+    }
+    
+    .lbl { font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 2px; }
+    .val-c { color: #00CCBC; font-size: 14px; font-weight: bold; }
+    .val-r { color: #FF4B4B; font-size: 14px; font-weight: bold; }
+
+    /* Bottoni grandi per dita (Rider Style) */
+    .stButton > button {
+        width: 100% !important;
+        height: 60px !important;
+        background-color: #1a1a1a !important;
+        border: 1px solid #444 !important;
+        border-radius: 15px !important;
+        color: white !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h2 style='text-align: center; color: #00CCBC;'>RIDER TRACKER PRO</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #00CCBC; margin-bottom: 20px;'>RIDER TRACKER PRO</h2>", unsafe_allow_html=True)
 
-# DASHBOARD 3x3 COMPATTA
+# DASHBOARD 3x3 REALE PER MOBILE
 st.markdown("""
-<div class="row-container">
-    <div class="card"><div class="label">LORDO</div><div class="val-cyan">€0.00</div></div>
-    <div class="card"><div class="label">NETTO</div><div class="val-red">€0.00</div></div>
-    <div class="card"><div class="label">ORE</div><div class="val-cyan">0.0</div></div>
-</div>
-<div class="row-container">
-    <div class="card"><div class="label">LITRI</div><div class="val-cyan">0.0L</div></div>
-    <div class="card"><div class="label">KM/L</div><div class="val-cyan">0.0</div></div>
-    <div class="card"><div class="label">BENZINA</div><div class="val-cyan">€0.00</div></div>
+<div class="mobile-grid">
+    <div class="mobile-card"><div class="lbl">LORDO</div><div class="val-c">€0.00</div></div>
+    <div class="mobile-card"><div class="lbl">NETTO</div><div class="val-r">€0.00</div></div>
+    <div class="mobile-card"><div class="lbl">ORE</div><div class="val-c">0.0</div></div>
+    <div class="mobile-card"><div class="lbl">LITRI</div><div class="val-c">0.0L</div></div>
+    <div class="mobile-card"><div class="lbl">KM/L</div><div class="val-c">0.0</div></div>
+    <div class="mobile-card"><div class="lbl">BENZINA</div><div class="val-c">€0.00</div></div>
 </div>
 """, unsafe_allow_html=True)
 
 st.write("---")
 
-# TASTI AZIONE COLORATI
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("➕ NUOVO TURNO"):
-        st.session_state.mode = 'turno'
-with col2:
-    if st.button("⛽ RIFORNIMENTO"):
-        st.session_state.mode = 'benzina'
+# TASTI AZIONE GRANDI
+if st.button("➕ NUOVO TURNO"):
+    st.session_state.m = 't'
+if st.button("⛽ BENZINA"):
+    st.session_state.m = 'b'
+if st.button("🕒 STORICO"):
+    st.session_state.m = 's'
 
-if st.button("🕒 VEDI STORICO COMPLETO"):
-    st.session_state.mode = 'storico'
+# LOGICA MODULI (Oggi: 5 Gen 2026)
+m = st.session_state.get('m')
+if m == 't':
+    st.info("Inserimento Turno - 05/01/2026")
+    st.number_input("Guadagno (€)", step=0.5)
+    st.number_input("KM totali", step=1)
+    if st.button("CONFERMA SALVATAGGIO"): st.success("Dato inserito!")
 
-# LOGICA MODULI (Data Auto: 05 Gen 2026)
-mode = st.session_state.get('mode', None)
-
-if mode == 'turno':
-    st.markdown("<h3 style='color:#00CCBC'>Dati Turno</h3>", unsafe_allow_html=True)
-    st.date_input("Data", datetime(2026, 1, 5)) # Forza data oggi
-    st.number_input("Lordo Incassato (€)", format="%.2f")
-    st.number_input("Chilometri Fatti", step=1)
-    if st.button("SALVA"): st.success("Salvato!")
-
-if mode == 'benzina':
-    st.markdown("<h3 style='color:#FFA500'>Dati Benzina</h3>", unsafe_allow_html=True)
-    st.number_input("Euro spesi (€)", format="%.2f")
-    st.number_input("Prezzo al litro", format="%.3f")
-    if st.button("REGISTRA"): st.success("Registrato!")
+if m == 'b':
+    st.warning("Rifornimento Benzina")
+    st.number_input("Spesa (€)", step=1.0)
+    if st.button("SALVA BENZINA"): st.success("Benzina salvata!")
